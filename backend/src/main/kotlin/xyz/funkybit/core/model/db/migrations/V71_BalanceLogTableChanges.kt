@@ -1,4 +1,4 @@
-package co.chainring.core.model.db.migrations
+package xyz.funkybit.core.model.db.migrations
 
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction

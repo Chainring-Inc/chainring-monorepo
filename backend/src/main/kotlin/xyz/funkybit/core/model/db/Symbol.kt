@@ -111,6 +111,7 @@ class SymbolEntity(guid: EntityID<SymbolId>) : GUIDEntity<SymbolId>(guid) {
 
     var name by SymbolTable.name
     var chainId by SymbolTable.chainId
+    var chain by ChainEntity referencedOn SymbolTable.chainId
     var contractAddress by SymbolTable.contractAddress.transform(
         toColumn = { it?.value },
         toReal = { it?.let { Address(Keys.toChecksumAddress(it)) } },

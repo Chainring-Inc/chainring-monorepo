@@ -34,6 +34,7 @@ import xyz.funkybit.core.model.db.DeployedSmartContractEntity
 import xyz.funkybit.core.model.db.FeeRates
 import xyz.funkybit.core.model.db.MarketEntity
 import xyz.funkybit.core.model.db.MarketId
+import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.core.model.db.SymbolEntity
 import xyz.funkybit.core.model.db.WalletEntity
 import java.math.BigInteger
@@ -85,6 +86,7 @@ class ConfigRoutes(private val faucetMode: FaucetMode) {
                                 jsonRpcUrl = "https://demo-anvil.funkybit.fun",
                                 blockExplorerNetName = "funkybit Demo BitLayer",
                                 blockExplorerUrl = "https://demo-otterscan.funkybit.fun",
+                                networkType = NetworkType.Evm,
                             ),
                         ),
                         markets = listOf(
@@ -134,6 +136,7 @@ class ConfigRoutes(private val faucetMode: FaucetMode) {
                                     jsonRpcUrl = chain.jsonRpcUrl,
                                     blockExplorerNetName = chain.blockExplorerNetName,
                                     blockExplorerUrl = chain.blockExplorerUrl,
+                                    networkType = chain.networkType,
                                 )
                             },
                             markets = MarketEntity.all().map { market ->

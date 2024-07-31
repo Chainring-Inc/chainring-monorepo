@@ -56,6 +56,12 @@ class ChainIdColumnType : ColumnType() {
     }
 }
 
+@Serializable
+enum class NetworkType {
+    Evm,
+    Bitcoin,
+}
+
 object ChainTable : IdTable<ChainId>("chain") {
     override val id: Column<EntityID<ChainId>> = registerColumn<ChainId>("id", ChainIdColumnType()).entityId()
     override val primaryKey = PrimaryKey(id)
@@ -64,6 +70,12 @@ object ChainTable : IdTable<ChainId>("chain") {
     val jsonRpcUrl = varchar("json_rpc_url", 10485760)
     val blockExplorerNetName = varchar("block_explorer_net_name", 10485760)
     val blockExplorerUrl = varchar("block_explorer_url", 10485760)
+    val networkType = customEnumeration(
+        "network_type",
+        "NetworkType",
+        { value -> NetworkType.valueOf(value as String) },
+        { PGEnum("NetworkType", it) },
+    )
 }
 
 class ChainEntity(id: EntityID<ChainId>) : Entity<ChainId>(id) {
@@ -71,6 +83,7 @@ class ChainEntity(id: EntityID<ChainId>) : Entity<ChainId>(id) {
     var jsonRpcUrl by ChainTable.jsonRpcUrl
     var blockExplorerNetName by ChainTable.blockExplorerNetName
     var blockExplorerUrl by ChainTable.blockExplorerUrl
+    var networkType by ChainTable.networkType
 
     companion object : EntityClass<ChainId, ChainEntity>(ChainTable) {
         fun create(
@@ -79,11 +92,13 @@ class ChainEntity(id: EntityID<ChainId>) : Entity<ChainId>(id) {
             jsonRpcUrl: String,
             blockExplorerNetName: String,
             blockExplorerUrl: String,
+            networkType: NetworkType,
         ) = ChainEntity.new(id) {
             this.name = name
             this.jsonRpcUrl = jsonRpcUrl
             this.blockExplorerNetName = blockExplorerNetName
             this.blockExplorerUrl = blockExplorerUrl
+            this.networkType = networkType
         }
 
         override fun all(): SizedIterable<ChainEntity> =

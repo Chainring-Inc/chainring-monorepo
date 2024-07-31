@@ -47,9 +47,9 @@ function HomeScreenContent() {
     marketsWithBackToBack
   } = useMemo(() => {
     const config = configQuery.data
-    const chainConfig = config?.chains.find(
-      (chain) => chain.id === (wallet.chainId || config.chains[0]?.id)
-    )
+    const chainConfig = config?.chains
+      .filter((chain) => chain.networkType === 'Evm')
+      .find((chain) => chain.id === (wallet.chainId || config.chains[0]?.id))
 
     const exchangeContract = chainConfig?.contracts?.find(
       (c) => c.name == 'Exchange'

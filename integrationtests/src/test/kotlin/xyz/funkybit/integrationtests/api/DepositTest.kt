@@ -15,6 +15,7 @@ import xyz.funkybit.apps.api.model.Deposit
 import xyz.funkybit.core.model.Symbol
 import xyz.funkybit.core.model.TxHash
 import xyz.funkybit.core.model.db.DepositEntity
+import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.integrationtests.testutils.AppUnderTestRunner
 import xyz.funkybit.integrationtests.testutils.waitForBalance
 import xyz.funkybit.integrationtests.utils.AssetAmount
@@ -43,9 +44,11 @@ class DepositTest {
         wsClient.assertBalancesMessageReceived()
 
         val config = apiClient.getConfiguration()
-        assertEquals(config.chains.size, 2)
 
-        (0 until config.chains.size).forEach { index ->
+        val chains = config.evmChains
+        assertEquals(chains.size, 2)
+
+        (0 until chains.size).forEach { index ->
 
             wallet.switchChain(config.chains[index].id)
             Faucet.fundAndMine(wallet.address, chainId = wallet.currentChainId)

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import xyz.funkybit.apps.api.model.FaucetApiRequest
 import xyz.funkybit.core.model.Symbol
 import xyz.funkybit.core.model.TxHash
+import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.integrationtests.testutils.AppUnderTestRunner
 import xyz.funkybit.integrationtests.utils.TestApiClient
 import xyz.funkybit.integrationtests.utils.Wallet
@@ -24,9 +25,10 @@ class FaucetTest {
 
         val config = apiClient.getConfiguration()
 
-        assertEquals(config.chains.size, 2)
+        val chains = config.evmChains
+        assertEquals(chains.size, 2)
 
-        config.chains.forEach { chain ->
+        chains.forEach { chain ->
             wallet.switchChain(chain.id)
             val nativeSymbol = Symbol(chain.symbols.first { it.contractAddress == null }.name)
 
@@ -59,9 +61,10 @@ class FaucetTest {
 
         val config = apiClient.getConfiguration()
 
-        assertEquals(config.chains.size, 2)
+        val chains = config.evmChains
+        assertEquals(chains.size, 2)
 
-        config.chains.forEach { chain ->
+        chains.forEach { chain ->
             wallet.switchChain(chain.id)
             val erc20Symbol = Symbol(chain.symbols.first { it.contractAddress != null && it.name.startsWith("ETH") }.name)
 

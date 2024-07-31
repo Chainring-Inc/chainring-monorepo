@@ -7,6 +7,7 @@ import xyz.funkybit.core.model.SequencerOrderId
 import xyz.funkybit.core.model.db.ChainEntity
 import xyz.funkybit.core.model.db.ChainId
 import xyz.funkybit.core.model.db.MarketEntity
+import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.core.model.db.OrderEntity
 import xyz.funkybit.core.model.db.OrderId
 import xyz.funkybit.core.model.db.OrderSide
@@ -26,8 +27,9 @@ object DbTestHelpers {
         jsonRpcUrl: String = "",
         blockExplorerNetName: String = "",
         blockExplorerUrl: String = "",
+        networkType: NetworkType = NetworkType.Evm,
     ): ChainEntity =
-        ChainEntity.create(id, name, jsonRpcUrl, blockExplorerNetName, blockExplorerUrl)
+        ChainEntity.create(id, name, jsonRpcUrl, blockExplorerNetName, blockExplorerUrl, networkType)
 
     fun createNativeSymbol(
         name: String,

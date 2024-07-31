@@ -9,6 +9,7 @@ export default class TradingSymbols {
   static fromConfig(config: ConfigurationApiResponse): TradingSymbols {
     return new TradingSymbols(
       config.chains
+        .filter((chain) => chain.networkType === 'Evm')
         .map((chain) =>
           chain.symbols.map(
             (symbol) =>

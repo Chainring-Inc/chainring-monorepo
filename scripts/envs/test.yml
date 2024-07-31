@@ -10,6 +10,7 @@ environment:
     JAVA_TOOL_OPTIONS: "-Xlog:gc+metaspace,gc+heap,gc:stdout:time,tags"
     ENABLE_TEST_ROUTES: "true"
     FAUCET_MODE: AllSymbols
+    BITCOIN_NETWORK_ENABLED: "false"
   sequencer:
     QUEUE_HOME: "/data/queues/test"
     CHECKPOINTS_ENABLED: "false"

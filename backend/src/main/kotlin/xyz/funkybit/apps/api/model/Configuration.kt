@@ -6,13 +6,17 @@ import xyz.funkybit.core.model.Symbol
 import xyz.funkybit.core.model.db.ChainId
 import xyz.funkybit.core.model.db.FeeRates
 import xyz.funkybit.core.model.db.MarketId
+import xyz.funkybit.core.model.db.NetworkType
 
 @Serializable
 data class ConfigurationApiResponse(
     val chains: List<Chain>,
     val markets: List<Market>,
     val feeRates: FeeRates,
-)
+) {
+    val evmChains: List<Chain>
+        get() = chains.filter { it.networkType == NetworkType.Evm }
+}
 
 enum class Role {
     User,
@@ -34,6 +38,7 @@ data class Chain(
     val jsonRpcUrl: String,
     val blockExplorerNetName: String,
     val blockExplorerUrl: String,
+    val networkType: NetworkType,
 )
 
 @Serializable

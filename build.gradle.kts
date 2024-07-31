@@ -215,5 +215,21 @@ val compileContractsAndGenerateWrappers by tasks.register("compileContractsAndGe
             }
         }
 
-    println("Web3j contract wrappers and Typescript ABIs generated successfully for all contracts.")
+    println("Web3j contract wrappers and Typescript ABIs generated successfully for all EVM contracts.")
+
+    println("Building Arch contracts")
+    val elfFile = File("${projectDir}/contracts/arch/contracts/exchange/target/program.elf")
+
+    exec {
+        isIgnoreExitValue = true
+        commandLine(
+            "bash", "-c", "cd ${projectDir}/contracts/arch/contracts/exchange && cargo build && cp $elfFile ${projectDir}/backend/src/main/resources"
+        )
+    }.also {
+        if (it.exitValue == 127) {
+            throw Exception("Cargo is missing, please follow the instructions: https://doc.rust-lang.org/cargo/getting-started/installation.html")
+        }
+    }
+
+    println("Arch contract successfully processed")
 }

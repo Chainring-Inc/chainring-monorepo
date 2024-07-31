@@ -70,6 +70,9 @@ const AdminMarketSchema = z.object({
 
 export type AdminMarket = z.infer<typeof AdminMarketSchema>
 
+const NetworkTypeSchema = z.enum(['Evm', 'Bitcoin'])
+export type NetworkType = z.infer<typeof NetworkTypeSchema>
+
 const ChainSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -77,7 +80,8 @@ const ChainSchema = z.object({
   symbols: z.array(SymbolSchema),
   jsonRpcUrl: z.string(),
   blockExplorerNetName: z.string(),
-  blockExplorerUrl: z.string()
+  blockExplorerUrl: z.string(),
+  networkType: NetworkTypeSchema
 })
 export type Chain = z.infer<typeof ChainSchema>
 
