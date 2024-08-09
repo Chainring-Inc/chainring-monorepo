@@ -1,6 +1,5 @@
 package xyz.funkybit.core.db
 
-import co.chainring.core.model.db.migrations.V71_BalanceLogTableChanges
 import xyz.funkybit.core.model.db.migrations.V10_WithdrawalTable
 import xyz.funkybit.core.model.db.migrations.V11_NonNullableDeployedContractProxyAddress
 import xyz.funkybit.core.model.db.migrations.V12_BigDecimalPrice
@@ -68,6 +67,8 @@ import xyz.funkybit.core.model.db.migrations.V68_RemoveMinMaxOfferPriceFromMarke
 import xyz.funkybit.core.model.db.migrations.V69_ClientOrderId
 import xyz.funkybit.core.model.db.migrations.V6_MarketTable
 import xyz.funkybit.core.model.db.migrations.V70_AddOrderBookSnapshotTable
+import xyz.funkybit.core.model.db.migrations.V71_BalanceLogTableChanges
+import xyz.funkybit.core.model.db.migrations.V72_AddNetworkType
 import xyz.funkybit.core.model.db.migrations.V7_OrderTable
 import xyz.funkybit.core.model.db.migrations.V8_ExecutionsAndTrades
 import xyz.funkybit.core.model.db.migrations.V9_SymbolTable
@@ -144,4 +145,5 @@ val migrations = listOf(
     V69_ClientOrderId(),
     V70_AddOrderBookSnapshotTable(),
     V71_BalanceLogTableChanges(),
+    V72_AddNetworkType(),
 )

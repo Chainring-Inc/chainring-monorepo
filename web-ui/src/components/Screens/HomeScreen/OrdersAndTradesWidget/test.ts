@@ -78,7 +78,8 @@ describe('rollupTrades', () => {
         contracts: [],
         jsonRpcUrl: '',
         blockExplorerUrl: '',
-        blockExplorerNetName: ''
+        blockExplorerNetName: '',
+        networkType: 'Evm'
       }
     ],
     markets: [

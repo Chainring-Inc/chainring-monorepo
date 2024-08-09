@@ -43,9 +43,11 @@ class DepositTest {
         wsClient.assertBalancesMessageReceived()
 
         val config = apiClient.getConfiguration()
-        assertEquals(config.chains.size, 2)
 
-        (0 until config.chains.size).forEach { index ->
+        val chains = config.evmChains
+        assertEquals(chains.size, 2)
+
+        (0 until chains.size).forEach { index ->
 
             wallet.switchChain(config.chains[index].id)
             Faucet.fundAndMine(wallet.address, chainId = wallet.currentChainId)

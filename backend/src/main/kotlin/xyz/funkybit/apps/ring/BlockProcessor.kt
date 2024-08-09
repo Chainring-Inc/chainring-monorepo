@@ -19,6 +19,7 @@ import xyz.funkybit.core.model.TxHash
 import xyz.funkybit.core.model.db.BlockEntity
 import xyz.funkybit.core.model.db.BlockHash
 import xyz.funkybit.core.model.db.BlockTable
+import xyz.funkybit.core.model.db.ChainEntity
 import xyz.funkybit.core.model.db.DepositEntity
 import xyz.funkybit.core.model.db.SymbolEntity
 import xyz.funkybit.core.model.db.WalletEntity
@@ -56,11 +57,15 @@ class BlockProcessor(
             while (true) {
                 try {
                     val blocksToProcess = transaction {
-                        (
-                            getLastProcessedBlock()?.number?.let { it + BigInteger.ONE }
-                                ?: DepositEntity.maxBlockNumber(chainId)?.let { it + BigInteger.ONE }
-                                ?: blockchainClient.getBlockNumber()
-                            ).rangeTo(blockchainClient.getBlockNumber())
+                        if (ChainEntity.findById(blockchainClient.chainId) != null) {
+                            (
+                                getLastProcessedBlock()?.number?.let { it + BigInteger.ONE }
+                                    ?: DepositEntity.maxBlockNumber(chainId)?.let { it + BigInteger.ONE }
+                                    ?: blockchainClient.getBlockNumber()
+                                ).rangeTo(blockchainClient.getBlockNumber())
+                        } else {
+                            listOf()
+                        }
                     }
                     for (blockNumber in blocksToProcess) {
                         transaction {

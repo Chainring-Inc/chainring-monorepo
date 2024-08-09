@@ -68,8 +68,9 @@ class AdminRouteTest {
         val apiClient = TestApiClient()
 
         val config = apiClient.getConfiguration()
-        assertEquals(config.chains.size, 2)
-        val chainId = config.chains[0].id
+        val chains = config.evmChains
+        assertEquals(chains.size, 2)
+        val chainId = chains[0].id
         val contractAddress = Address("0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48")
         val symbolName = "NAME:$chainId"
         val adminRequest = AdminRoutes.Companion.AdminSymbol(
@@ -147,9 +148,10 @@ class AdminRouteTest {
         }
 
         val config = apiClient.getConfiguration()
-        assertEquals(config.chains.size, 2)
-        val chainId1 = config.chains[0].id
-        val chainId2 = config.chains[1].id
+        val chains = config.evmChains
+        assertEquals(chains.size, 2)
+        val chainId1 = chains[0].id
+        val chainId2 = chains[1].id
         val symbolName1 = "NAME:$chainId1"
         val symbolName2 = "NAME:$chainId2"
         val marketId = MarketId("$symbolName1/$symbolName2")

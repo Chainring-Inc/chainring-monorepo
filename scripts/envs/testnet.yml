@@ -20,6 +20,7 @@ environment:
     TAKER_FEE_RATE: "0.02"
     ENABLE_TEST_ROUTES: "false"
     FAUCET_MODE: OnlyERC20
+    BITCOIN_NETWORK_ENABLED: "false"
   sequencer:
     QUEUE_HOME: "/data/queues/testnet"
     CHECKPOINTS_ENABLED: "true"

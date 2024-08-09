@@ -6,6 +6,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
 import org.bitcoinj.core.NetworkParameters
 import xyz.funkybit.core.blockchain.ChainManager
 import xyz.funkybit.core.blockchain.SmartFeeMode
+import xyz.funkybit.core.model.db.ChainId
 import xyz.funkybit.core.model.rpc.BitcoinRpc
 import xyz.funkybit.core.model.rpc.BitcoinRpcParams
 import xyz.funkybit.core.model.rpc.BitcoinRpcRequest
@@ -24,6 +25,8 @@ object BitcoinClient : JsonRpcClientBase(
     override val logger = KotlinLogging.logger {}
 
     val bitcoinConfig = ChainManager.bitcoinBlockchainClientConfig
+
+    val chainId = ChainId(8086u)
 
     fun getParams(): NetworkParameters = NetworkParameters.fromID(ChainManager.bitcoinBlockchainClientConfig.net)!!
 

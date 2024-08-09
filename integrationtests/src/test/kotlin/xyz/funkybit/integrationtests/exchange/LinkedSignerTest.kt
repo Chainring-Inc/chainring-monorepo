@@ -1,6 +1,7 @@
 package xyz.funkybit.integrationtests.exchange
 
 import org.http4k.client.WebsocketClient
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.extension.ExtendWith
 import org.web3j.crypto.Hash
 import org.web3j.crypto.Keys
@@ -42,19 +43,21 @@ class LinkedSignerTest : OrderBaseTest() {
         wsClient.assertBalancesMessageReceived()
 
         val config = apiClient.getConfiguration()
-        assertEquals(config.chains.size, 2)
 
-        val btc = config.chains[0].symbols.first { it.name == "BTC".toChainSymbol(config.chains[0].id) }
+        val chains = config.evmChains
+        Assertions.assertEquals(chains.size, 2)
+
+        val btc = chains[0].symbols.first { it.name == "BTC".toChainSymbol(chains[0].id) }
         val linkedSignerKeyPair = Keys.createEcKeyPair()
         val btcDepositAmount = AssetAmount(btc, "0.4")
-        wallet.switchChain(config.chains[0].id)
+        wallet.switchChain(chains[0].id)
 
         Faucet.fundAndMine(wallet.address, amount = BigDecimal("0.5").toFundamentalUnits(18), chainId = wallet.currentChainId)
 
         assertTrue(apiClient.tryListWithdrawals().isRight())
         // set a linked client in API but not on chain yet so backend/API does not know about it
         apiClient.linkedSignerEcKeyPair = linkedSignerKeyPair
-        apiClient.switchChain(config.chains[0].id)
+        apiClient.switchChain(chains[0].id)
         // the api call should fail with a 401, since auth token signed with key not linked yet
         assertEquals(apiClient.tryListWithdrawals().leftOrNull()?.httpCode, 401)
 
@@ -66,7 +69,7 @@ class LinkedSignerTest : OrderBaseTest() {
         val txReceipt = wallet.setLinkedSigner(Keys.getAddress(linkedSignerKeyPair), digest, signature)
         assertTrue(txReceipt.isStatusOK)
         // read the linked signer back from the contract and verify
-        assertEquals(Keys.toChecksumAddress(Keys.getAddress(linkedSignerKeyPair)), wallet.getLinkedSigner(config.chains[0].id).value)
+        assertEquals(Keys.toChecksumAddress(Keys.getAddress(linkedSignerKeyPair)), wallet.getLinkedSigner(chains[0].id).value)
         waitFor(atMost = 20000) {
             apiClient.tryListWithdrawals().isRight() // should eventually succeed once linked signer tx is confirmed
         }

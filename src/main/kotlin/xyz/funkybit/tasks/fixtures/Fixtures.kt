@@ -1,9 +1,12 @@
 package xyz.funkybit.tasks.fixtures
 
+import xyz.funkybit.core.blockchain.BitcoinBlockchainClientConfig
 import xyz.funkybit.core.blockchain.BlockchainClient
+import xyz.funkybit.core.blockchain.bitcoin.BitcoinClient
 import xyz.funkybit.core.model.Address
 import xyz.funkybit.core.model.db.ChainId
 import xyz.funkybit.core.model.db.FeeRates
+import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.core.model.db.SymbolId
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -22,6 +25,7 @@ data class Fixtures(
         val jsonRpcUrl: String,
         val blockExplorerNetName: String,
         val blockExplorerUrl: String,
+        val networkType: NetworkType
     )
 
     data class Symbol(
@@ -53,11 +57,23 @@ data class Fixtures(
 
 fun String.toChainSymbol(chainId: ChainId) = "$this:$chainId"
 
-fun getFixtures(chainringChainClients: List<BlockchainClient>) = Fixtures(
+fun getFixtures(chainringChainClients: List<BlockchainClient>, bitcoinBlockchainClientConfig: BitcoinBlockchainClientConfig) = Fixtures(
     feeRates = FeeRates.fromPercents(maker = System.getenv("MAKER_FEE_RATE")?.toDoubleOrNull() ?: 1.0, taker = System.getenv("TAKER_FEE_RATE")?.toDoubleOrNull() ?: 2.0),
     chains = chainringChainClients.map {
-        Fixtures.Chain(it.chainId, it.config.name, Address("0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc"), it.config.url, it.config.blockExplorerNetName, it.config.blockExplorerUrl)
-    },
+        Fixtures.Chain(it.chainId, it.config.name, Address("0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc"), it.config.url, it.config.blockExplorerNetName, it.config.blockExplorerUrl, NetworkType.Evm)
+    } + if (bitcoinBlockchainClientConfig.enabled) {
+        listOf(
+            Fixtures.Chain(
+                BitcoinClient.chainId,
+                "Bitcoin",
+                Address("0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc"),
+                bitcoinBlockchainClientConfig.url,
+                bitcoinBlockchainClientConfig.blockExplorerNetName,
+                bitcoinBlockchainClientConfig.blockExplorerUrl,
+                NetworkType.Bitcoin
+            )
+        )
+    } else listOf(),
     symbols = chainringChainClients.map { client ->
         listOf(
             // BTC is the native token since we would be on Bitcoin L2
@@ -67,7 +83,11 @@ fun getFixtures(chainringChainClients: List<BlockchainClient>) = Fixtures(
             Fixtures.Symbol(name = "USDC".toChainSymbol(client.chainId), description = "USD Coin", chainId = client.chainId, isNative = false, 6, BigDecimal("1")),
             Fixtures.Symbol(name = "DAI".toChainSymbol(client.chainId), description = "Dai", chainId = client.chainId, isNative = false, 18, BigDecimal("1"))
         )
-    }.flatten(),
+    }.flatten() + if (bitcoinBlockchainClientConfig.enabled) {
+        listOf(
+            Fixtures.Symbol(name = "BTC".toChainSymbol(BitcoinClient.chainId), description = "Bitcoin", chainId = BitcoinClient.chainId, isNative = true, 8, BigDecimal("0.00000002"))
+        )
+    } else listOf(),
     markets = chainringChainClients.map { client ->
         listOf(
             Fixtures.Market(

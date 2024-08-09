@@ -47,6 +47,14 @@ object KeyValueStore : Table("key_value_store") {
         setValue(key, value.toEpochMilliseconds().toString())
     }
 
+    fun getBoolean(key: String): Boolean {
+        return getValue(key).toBoolean()
+    }
+
+    fun setBoolean(key: String, value: Boolean) {
+        setValue(key, value.toString())
+    }
+
     fun getBigInt(key: String): BigInteger? {
         return getValue(key)?.toBigInteger()
     }

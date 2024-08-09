@@ -15,6 +15,7 @@ import xyz.funkybit.apps.ring.RingApp
 import xyz.funkybit.apps.ring.RingAppConfig
 import xyz.funkybit.core.blockchain.ChainManager
 import xyz.funkybit.core.blockchain.ContractType
+import xyz.funkybit.core.blockchain.bitcoin.BitcoinClient
 import xyz.funkybit.core.db.DbConfig
 import xyz.funkybit.core.model.MarketMinFee
 import xyz.funkybit.core.model.Symbol
@@ -68,7 +69,7 @@ class AppUnderTestRunner : BeforeAllCallback, BeforeEachCallback {
         val blockchainClients = ChainManager.blockchainConfigs.map {
             TestBlockchainClient(it)
         }
-        val fixtures = getFixtures(blockchainClients)
+        val fixtures = getFixtures(blockchainClients, ChainManager.bitcoinBlockchainClientConfig)
 
         context
             .root
@@ -117,6 +118,10 @@ class AppUnderTestRunner : BeforeAllCallback, BeforeEachCallback {
                                         blockchainClient.chainId,
                                     )?.deprecated = true
                                 }
+                                DeployedSmartContractEntity.findLastDeployedContractByNameAndChain(
+                                    ContractType.Exchange.name,
+                                    BitcoinClient.chainId,
+                                )?.deprecated = true
                                 WithdrawalEntity.findPending().forEach { it.update(WithdrawalStatus.Failed, "restarting test") }
                                 BlockTable.deleteAll()
                             }
@@ -133,6 +138,19 @@ class AppUnderTestRunner : BeforeAllCallback, BeforeEachCallback {
                                 .until {
                                     transaction {
                                         DeployedSmartContractEntity.validContracts(blockchainClient.chainId)
+                                            .map { it.name } == listOf(ContractType.Exchange.name)
+                                    }
+                                }
+                        }
+                        if (BitcoinClient.bitcoinConfig.enabled) {
+                            await
+                                .pollInSameThread()
+                                .pollDelay(Duration.ofMillis(100))
+                                .pollInterval(Duration.ofMillis(100))
+                                .atMost(Duration.ofMillis(30000L))
+                                .until {
+                                    transaction {
+                                        DeployedSmartContractEntity.validContracts(BitcoinClient.chainId)
                                             .map { it.name } == listOf(ContractType.Exchange.name)
                                     }
                                 }

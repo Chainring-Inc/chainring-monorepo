@@ -43,15 +43,16 @@ class WithdrawalTest {
         wsClient.assertBalancesMessageReceived()
 
         val config = apiClient.getConfiguration()
-        assertEquals(config.chains.size, 2)
+        val chains = config.evmChains
+        assertEquals(chains.size, 2)
 
-        (0 until config.chains.size).forEach { index ->
+        (0 until chains.size).forEach { index ->
 
-            wallet.switchChain(config.chains[index].id)
+            wallet.switchChain(chains[index].id)
             Faucet.fundAndMine(wallet.address, chainId = wallet.currentChainId)
 
-            val btc = config.chains[index].symbols.first { it.name == "BTC".toChainSymbol(config.chains[index].id) }
-            val usdc = config.chains[index].symbols.first { it.name == "USDC".toChainSymbol(config.chains[index].id) }
+            val btc = chains[index].symbols.first { it.name == "BTC".toChainSymbol(chains[index].id) }
+            val usdc = chains[index].symbols.first { it.name == "USDC".toChainSymbol(chains[index].id) }
             assertEquals(BigDecimal("0.00002").toFundamentalUnits(btc.decimals.toInt()), btc.withdrawalFee)
             assertEquals(BigDecimal("1").toFundamentalUnits(usdc.decimals.toInt()), usdc.withdrawalFee)
             val symbolFilterList = listOf(btc.name, usdc.name)

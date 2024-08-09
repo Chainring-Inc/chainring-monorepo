@@ -9,23 +9,23 @@ anvil_image:
 otterscan_image:
 	cd docker/otterscan && docker build -t otterscan -f ./Dockerfile .&& cd ../..
 
-bitcoin_image:
-	cd docker/bitcoin && make build && cd ../..
-
 stop_containers:
 	docker compose down --remove-orphans
+	cd contracts && make stop_containers && cd ..
 
 start_containers: stop_containers
 	docker compose down --remove-orphans && docker compose up -d
+	cd contracts && make start_containers && cd ..
 
 stop_arch_containers:
-	docker compose -f ./docker-compose-arch.yaml down
+	cd contracts && make stop_containers && cd ..
 
-start_arch_containers: stop_arch_containers
-	docker compose -f ./docker-compose-arch.yaml  up -d
+start_arch_containers:
+	cd contracts && make start_containers && cd ..
 
 start_ci_containers: stop_containers
 	docker compose -f ./docker-compose-ci.yaml down --remove-orphans && docker compose -f ./docker-compose-ci.yaml up -d
+	cd contracts && make start_ci_containers && cd ..
 
 anvil_logs:
 	docker compose logs anvil -f

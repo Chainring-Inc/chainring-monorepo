@@ -2,6 +2,7 @@ package xyz.funkybit.integrationtests.api
 
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.extension.ExtendWith
 import xyz.funkybit.apps.api.FaucetMode
 import xyz.funkybit.apps.api.model.SymbolInfo
@@ -12,6 +13,7 @@ import xyz.funkybit.core.model.Address
 import xyz.funkybit.core.model.FeeRate
 import xyz.funkybit.core.model.db.FeeRates
 import xyz.funkybit.core.model.db.MarketId
+import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.core.model.db.SymbolEntity
 import xyz.funkybit.core.utils.toFundamentalUnits
 import xyz.funkybit.integrationtests.testutils.AppUnderTestRunner
@@ -20,6 +22,7 @@ import xyz.funkybit.tasks.fixtures.toChainSymbol
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.test.Test
+import kotlin.test.assertNull
 
 @ExtendWith(AppUnderTestRunner::class)
 class ConfigRouteTest {
@@ -28,7 +31,7 @@ class ConfigRouteTest {
         val apiClient = TestApiClient()
 
         val config = apiClient.getConfiguration()
-        assertEquals(config.chains.size, 2)
+        assertEquals(config.evmChains.size, 2)
         ChainManager.blockchainConfigs.forEach { clientConfig ->
             val client = BlockchainClient(clientConfig)
             val chainConfig = config.chains.first { it.id == client.chainId }
@@ -57,6 +60,24 @@ class ConfigRouteTest {
             config.markets.associate { it.id to it.minFee },
             TestApiClient.getSequencerStateDump().markets.associate { MarketId(it.id) to it.minFee },
         )
+    }
+
+    @Test
+    fun testBitcoinConfiguration() {
+        Assumptions.assumeTrue((System.getenv("INTEGRATION_RUN") ?: "0") != "1")
+
+        val apiClient = TestApiClient()
+
+        val config = apiClient.getConfiguration()
+        assertEquals(config.chains.filter { it.networkType == NetworkType.Bitcoin }.size, 1)
+        val btcChainConfig = config.chains.single { it.networkType == NetworkType.Bitcoin }
+        assertEquals(btcChainConfig.contracts.size, 1)
+        assertEquals(btcChainConfig.contracts[0].name, ContractType.Exchange.name)
+
+        val btcSymbol = btcChainConfig.symbols.first { it.name == "BTC".toChainSymbol(btcChainConfig.id) }
+        assertEquals(BigDecimal("0.00000002").toFundamentalUnits(btcSymbol.decimals.toInt()), btcSymbol.withdrawalFee)
+        assertNull(btcSymbol.contractAddress)
+        assertEquals(8.toUByte(), btcSymbol.decimals)
     }
 
     @Test

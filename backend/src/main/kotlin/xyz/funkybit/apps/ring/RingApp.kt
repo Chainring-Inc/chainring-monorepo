@@ -30,6 +30,7 @@ class RingApp(config: RingAppConfig = RingAppConfig()) : BaseApp(config.dbConfig
         db.upgrade(migrations, logger)
 
         chainWorkers.forEach(ChainWorker::start)
+        BitcoinChainWorker().start()
         settlementCoordinator.start()
         repeater.start()
 

@@ -21,30 +21,32 @@ export const initializeWagmiConfig = async () => {
     await apiClient.getConfiguration()
   )
 
-  const chains = apiConfig.chains.map((chain) => {
-    const nativeSymbol = chain.symbols.filter(
-      (symbol) => symbol.contractAddress == null
-    )[0]
+  const chains = apiConfig.chains
+    .filter((chain) => chain.networkType === 'Evm')
+    .map((chain) => {
+      const nativeSymbol = chain.symbols.filter(
+        (symbol) => symbol.contractAddress == null
+      )[0]
 
-    return defineChain({
-      id: chain.id,
-      name: chain.name,
-      nativeCurrency: {
-        decimals: nativeSymbol.decimals,
-        name: nativeSymbol.description,
-        symbol: nativeSymbol.name.replace(new RegExp(':.*', ''), '')
-      },
-      rpcUrls: {
-        default: { http: [chain.jsonRpcUrl] }
-      },
-      blockExplorers: {
-        default: {
-          name: chain.blockExplorerNetName,
-          url: chain.blockExplorerUrl
+      return defineChain({
+        id: chain.id,
+        name: chain.name,
+        nativeCurrency: {
+          decimals: nativeSymbol.decimals,
+          name: nativeSymbol.description,
+          symbol: nativeSymbol.name.replace(new RegExp(':.*', ''), '')
+        },
+        rpcUrls: {
+          default: { http: [chain.jsonRpcUrl] }
+        },
+        blockExplorers: {
+          default: {
+            name: chain.blockExplorerNetName,
+            url: chain.blockExplorerUrl
+          }
         }
-      }
+      })
     })
-  })
 
   if (isNonEmptyArray(chains)) {
     allChains = chains

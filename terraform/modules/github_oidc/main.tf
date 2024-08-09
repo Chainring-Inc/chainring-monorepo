@@ -20,7 +20,10 @@ resource "aws_iam_role" "role" {
             "token.actions.githubusercontent.com:aud" : var.oidc_audience
           },
           "StringLike" : {
-            "token.actions.githubusercontent.com:sub" : "repo:${var.github_org}/${var.repository_name}:*"
+            "token.actions.githubusercontent.com:sub" : [
+              "repo:${var.github_org}/${var.repository_name}:*",
+              "repo:${var.github_org}/${var.contracts_repository_name}:*",
+            ]
           }
         }
       }

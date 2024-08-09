@@ -8,6 +8,11 @@ variable "repository_name" {
   default     = "chainring-monorepo"
 }
 
+variable "contracts_repository_name" {
+  description = "Name of GitHub repository (case sensitive)"
+  default     = "chainring-contracts"
+}
+
 variable "oidc_provider_arn" {
   description = "Arn for the GitHub OIDC Provider."
   default     = ""

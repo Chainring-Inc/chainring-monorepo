@@ -24,9 +24,10 @@ class FaucetTest {
 
         val config = apiClient.getConfiguration()
 
-        assertEquals(config.chains.size, 2)
+        val chains = config.evmChains
+        assertEquals(chains.size, 2)
 
-        config.chains.forEach { chain ->
+        chains.forEach { chain ->
             wallet.switchChain(chain.id)
             val nativeSymbol = Symbol(chain.symbols.first { it.contractAddress == null }.name)
 
@@ -59,9 +60,10 @@ class FaucetTest {
 
         val config = apiClient.getConfiguration()
 
-        assertEquals(config.chains.size, 2)
+        val chains = config.evmChains
+        assertEquals(chains.size, 2)
 
-        config.chains.forEach { chain ->
+        chains.forEach { chain ->
             wallet.switchChain(chain.id)
             val erc20Symbol = Symbol(chain.symbols.first { it.contractAddress != null && it.name.startsWith("ETH") }.name)
 

@@ -15,6 +15,7 @@ import xyz.funkybit.apps.telegrambot.model.estimateSwap
 import xyz.funkybit.core.blockchain.ChainManager
 import xyz.funkybit.core.model.abbreviated
 import xyz.funkybit.core.model.db.DepositStatus
+import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.core.model.db.OrderStatus
 import xyz.funkybit.core.model.db.SymbolEntity
 import xyz.funkybit.core.model.db.WithdrawalStatus
@@ -36,7 +37,7 @@ class InputHandler(
     fun handle(input: Input) {
         val user = TelegramBotUserEntity.getOrCreate(input.from)
         val currentWallet = user.currentWallet()
-        val symbols = SymbolEntity.all().sortedBy { it.name }
+        val symbols = SymbolEntity.all().filter { it.chain.networkType == NetworkType.Evm }.sortedBy { it.name }
 
         when (val currentState = user.sessionState) {
             is SessionState.Initial -> {

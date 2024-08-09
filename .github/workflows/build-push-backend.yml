@@ -17,13 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - name: Setup JDK
         uses: ./.github/actions/setup-java-17
       - name: Setup AWS
         uses: ./.github/actions/setup-aws
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
-      - name: Start Anvil and Postgres containers
+      - name: Start Anvil, Postgres, Arch and Bitcoin containers
         run: |
           make start_ci_containers
       - name: Check with Gradle Wrapper

@@ -36,14 +36,15 @@ class SovereignWithdrawalTest {
         wsClient.assertBalancesMessageReceived()
 
         val config = apiClient.getConfiguration()
-        Assertions.assertEquals(config.chains.size, 2)
+        val chains = config.evmChains
+        Assertions.assertEquals(chains.size, 2)
 
-        (0 until config.chains.size).forEach { index ->
-            wallet.switchChain(config.chains[index].id)
+        (0 until chains.size).forEach { index ->
+            wallet.switchChain(chains[index].id)
             Faucet.fundAndMine(wallet.address, amount = BigDecimal("1").toFundamentalUnits(18), chainId = wallet.currentChainId)
 
-            val btc = config.chains[index].symbols.first { it.name == "BTC".toChainSymbol(config.chains[index].id) }
-            val usdc = config.chains[index].symbols.first { it.name == "USDC".toChainSymbol(config.chains[index].id) }
+            val btc = chains[index].symbols.first { it.name == "BTC".toChainSymbol(chains[index].id) }
+            val usdc = chains[index].symbols.first { it.name == "USDC".toChainSymbol(chains[index].id) }
             Assertions.assertEquals(BigDecimal("0.00002").toFundamentalUnits(btc.decimals.toInt()), btc.withdrawalFee)
             Assertions.assertEquals(BigDecimal("1").toFundamentalUnits(usdc.decimals.toInt()), usdc.withdrawalFee)
 
@@ -145,14 +146,15 @@ class SovereignWithdrawalTest {
         wsClient.assertBalancesMessageReceived()
 
         val config = apiClient.getConfiguration()
-        Assertions.assertEquals(config.chains.size, 2)
+        val chains = config.evmChains
+        Assertions.assertEquals(chains.size, 2)
 
-        (0 until config.chains.size).forEach { index ->
-            wallet.switchChain(config.chains[index].id)
+        (0 until chains.size).forEach { index ->
+            wallet.switchChain(chains[index].id)
             Faucet.fundAndMine(wallet.address, amount = BigDecimal("1").toFundamentalUnits(18), chainId = wallet.currentChainId)
 
-            val btc = config.chains[index].symbols.first { it.name == "BTC".toChainSymbol(config.chains[index].id) }
-            val usdc = config.chains[index].symbols.first { it.name == "USDC".toChainSymbol(config.chains[index].id) }
+            val btc = chains[index].symbols.first { it.name == "BTC".toChainSymbol(chains[index].id) }
+            val usdc = chains[index].symbols.first { it.name == "USDC".toChainSymbol(chains[index].id) }
             Assertions.assertEquals(BigDecimal("0.00002").toFundamentalUnits(btc.decimals.toInt()), btc.withdrawalFee)
             Assertions.assertEquals(BigDecimal("1").toFundamentalUnits(usdc.decimals.toInt()), usdc.withdrawalFee)
 

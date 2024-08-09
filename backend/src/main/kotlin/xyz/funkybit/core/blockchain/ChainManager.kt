@@ -38,12 +38,15 @@ data class FeeEstimationSettings(
 )
 
 data class BitcoinBlockchainClientConfig(
+    val enabled: Boolean,
     val url: String,
     val net: String,
     val enableBasicAuth: Boolean,
     val user: String,
     val password: String,
     val feeSettings: FeeEstimationSettings,
+    val blockExplorerNetName: String,
+    val blockExplorerUrl: String,
 )
 
 object ChainManager {
@@ -101,12 +104,15 @@ object ChainManager {
         )
     }
     val bitcoinBlockchainClientConfig = BitcoinBlockchainClientConfig(
+        enabled = (System.getenv("BITCOIN_NETWORK_ENABLED") ?: "true").toBoolean(),
         url = System.getenv("BITCOIN_NETWORK_RPC_URL") ?: "http://localhost:18443",
         net = System.getenv("BITCOIN_NETWORK_NAME") ?: "org.bitcoin.test",
         enableBasicAuth = (System.getenv("BITCOIN_NETWORK_ENABLE_BASIC_AUTH") ?: "true").toBoolean(),
         user = System.getenv("BITCOIN_NETWORK_RPC_USER") ?: "user",
         password = System.getenv("BITCOIN_NETWORK_RPC_PASSWORD") ?: "password",
         feeSettings = FeeEstimationSettings(1, SmartFeeMode.CONSERVATIVE, 5, 50),
+        blockExplorerNetName = System.getenv("BLOCK_EXPLORER_NET_NAME_BITCOIN") ?: "Bitcoin Network",
+        blockExplorerUrl = System.getenv("BLOCK_EXPLORER_URL_BITCOIN") ?: "",
     )
 
     private val blockchainClientsByChainId: Map<ChainId, BlockchainClient> by lazy {
