@@ -14,7 +14,6 @@ import xyz.funkybit.core.model.FeeRate
 import xyz.funkybit.core.model.db.FeeRates
 import xyz.funkybit.core.model.db.MarketEntity
 import xyz.funkybit.core.model.db.MarketId
-import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.core.model.db.SymbolEntity
 import xyz.funkybit.core.model.db.SymbolId
 import xyz.funkybit.core.model.db.WalletEntity

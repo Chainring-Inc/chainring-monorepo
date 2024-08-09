@@ -145,5 +145,5 @@ val migrations = listOf(
     V69_ClientOrderId(),
     V70_AddOrderBookSnapshotTable(),
     V71_BalanceLogTableChanges(),
-    V72_AddNetworkType()
+    V72_AddNetworkType(),
 )

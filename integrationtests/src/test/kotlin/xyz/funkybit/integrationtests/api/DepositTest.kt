@@ -15,7 +15,6 @@ import xyz.funkybit.apps.api.model.Deposit
 import xyz.funkybit.core.model.Symbol
 import xyz.funkybit.core.model.TxHash
 import xyz.funkybit.core.model.db.DepositEntity
-import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.integrationtests.testutils.AppUnderTestRunner
 import xyz.funkybit.integrationtests.testutils.waitForBalance
 import xyz.funkybit.integrationtests.utils.AssetAmount

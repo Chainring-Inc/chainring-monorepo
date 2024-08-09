@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import xyz.funkybit.apps.api.model.FaucetApiRequest
 import xyz.funkybit.core.model.Symbol
 import xyz.funkybit.core.model.TxHash
-import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.integrationtests.testutils.AppUnderTestRunner
 import xyz.funkybit.integrationtests.utils.TestApiClient
 import xyz.funkybit.integrationtests.utils.Wallet

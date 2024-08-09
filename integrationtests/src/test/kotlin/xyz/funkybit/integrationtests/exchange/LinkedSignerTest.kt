@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.web3j.crypto.Hash
 import org.web3j.crypto.Keys
 import org.web3j.crypto.Sign
-import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.core.model.db.OrderSide
 import xyz.funkybit.core.model.db.WithdrawalStatus
 import xyz.funkybit.core.model.toEvmSignature

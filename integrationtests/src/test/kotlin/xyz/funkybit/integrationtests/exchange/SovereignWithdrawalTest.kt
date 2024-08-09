@@ -5,7 +5,6 @@ import org.http4k.client.WebsocketClient
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.extension.ExtendWith
 import org.web3j.utils.Numeric
-import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.core.utils.toFundamentalUnits
 import xyz.funkybit.integrationtests.testutils.AppUnderTestRunner
 import xyz.funkybit.integrationtests.testutils.waitForBalance

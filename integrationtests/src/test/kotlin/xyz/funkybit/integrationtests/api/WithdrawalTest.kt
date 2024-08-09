@@ -9,7 +9,6 @@ import xyz.funkybit.apps.api.model.ApiError
 import xyz.funkybit.apps.api.model.ReasonCode
 import xyz.funkybit.apps.api.model.websocket.SubscriptionTopic
 import xyz.funkybit.core.evm.EIP712Transaction
-import xyz.funkybit.core.model.db.NetworkType
 import xyz.funkybit.core.model.db.WithdrawalEntity
 import xyz.funkybit.core.model.db.WithdrawalStatus
 import xyz.funkybit.core.utils.toFundamentalUnits
